@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 
-import { useActionData } from "react-router-dom";
-
+// Using environment variable for API URL
 export const ShopContext = createContext(null);
 
 const getDefaultCart = () => {
@@ -13,16 +12,21 @@ const getDefaultCart = () => {
 };
 
 const ShopContextProvider = (props) => {
+  // Use environment variable for the API URL, fallback to hardcoded URL if not available
+  const url = process.env.REACT_APP_API_URL || 'https://e-commerce-backend-u1kd.onrender.com';
+
   const [all_product, setAll_product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    fetch("http://localhost:4000/allproducts")
+    // Fetch all products from the deployed backend
+    fetch(`${url}/allproducts`)
       .then((response) => response.json())
       .then((data) => setAll_product(data));
 
+    // Fetch cart items if auth token is available
     if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/getcart", {
+      fetch(`${url}/getcart`, {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -34,13 +38,13 @@ const ShopContextProvider = (props) => {
         .then((response) => response.json())
         .then((data) => setCartItems(data));
     }
-  }, []); // if you remove [] from the code the backend fetched the code again and again
+  }, [url]); // Added url as a dependency to ensure it's correctly used
 
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
 
     if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/addtocart", {
+      fetch(`${url}/addtocart`, {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -58,7 +62,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
 
     if (localStorage.getItem("auth-token")) {
-      fetch("http://localhost:4000/removefromcart", {
+      fetch(`${url}/removefromcart`, {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -103,6 +107,7 @@ const ShopContextProvider = (props) => {
     addToCart,
     removeFromCart,
   };
+
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}
@@ -111,6 +116,7 @@ const ShopContextProvider = (props) => {
 };
 
 export default ShopContextProvider;
+
 
 /*
 import React, { createContext, useEffect, useState } from "react";
