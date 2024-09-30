@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 
-// Using environment variable for API URL
+import { useActionData } from "react-router-dom";
+
 export const ShopContext = createContext(null);
 
 const getDefaultCart = () => {
@@ -12,21 +13,17 @@ const getDefaultCart = () => {
 };
 
 const ShopContextProvider = (props) => {
-  // Use environment variable for the API URL, fallback to hardcoded URL if not available
-  const url = process.env.REACT_APP_API_URL || 'https://e-commerce-backend-u1kd.onrender.com';
-
+ 
   const [all_product, setAll_product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    // Fetch all products from the deployed backend
-    fetch(`${url}/allproducts`)
+    fetch("https://e-commerce-backend-u1kd.onrender.com/allproducts")
       .then((response) => response.json())
       .then((data) => setAll_product(data));
 
-    // Fetch cart items if auth token is available
     if (localStorage.getItem("auth-token")) {
-      fetch(`${url}/getcart`, {
+      fetch("https://e-commerce-backend-u1kd.onrender.com/getcart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -38,13 +35,13 @@ const ShopContextProvider = (props) => {
         .then((response) => response.json())
         .then((data) => setCartItems(data));
     }
-  }, [url]); // Added url as a dependency to ensure it's correctly used
+  }, []); // if you remove [] from the code the backend fetched the code again and again
 
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
 
     if (localStorage.getItem("auth-token")) {
-      fetch(`${url}/addtocart`, {
+      fetch("https://e-commerce-backend-u1kd.onrender.com/addtocart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -62,7 +59,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
 
     if (localStorage.getItem("auth-token")) {
-      fetch(`${url}/removefromcart`, {
+      fetch("https://e-commerce-backend-u1kd.onrender.com/removefromcart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -107,7 +104,6 @@ const ShopContextProvider = (props) => {
     addToCart,
     removeFromCart,
   };
-
   return (
     <ShopContext.Provider value={contextValue}>
       {props.children}
@@ -116,6 +112,7 @@ const ShopContextProvider = (props) => {
 };
 
 export default ShopContextProvider;
+
 
 
 /*
