@@ -6,7 +6,7 @@ export const ListProduct = () => {
   const [allproducts, setAllProducts] = useState([]);
 
   const fetchInfo = async () => {
-    await fetch("https://e-commerce-backend-u1kd.onrender.com/allproducts")
+    await fetch("https://e-commerce-backend3.onrender.com/allproducts")
       .then((res) => res.json())
       .then((data) => {
         setAllProducts(data);
@@ -18,7 +18,7 @@ export const ListProduct = () => {
   }, []); //[] this help to exicute once only
 
   const remove_product = async (id) => {
-    await fetch("https://e-commerce-backend-u1kd.onrender.com/removeproduct", {
+    await fetch("https://e-commerce-backend3.onrender.com/removeproduct", {
       method: "post",
       headers: {
         Accept: "application/json",
