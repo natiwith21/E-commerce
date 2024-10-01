@@ -13,17 +13,16 @@ const getDefaultCart = () => {
 };
 
 const ShopContextProvider = (props) => {
- 
   const [all_product, setAll_product] = useState([]);
   const [cartItems, setCartItems] = useState(getDefaultCart());
 
   useEffect(() => {
-    fetch("https://e-commerce-backend-u1kd.onrender.com/allproducts")
+    fetch("https://e-commerce-backend3.onrender.com/allproducts")
       .then((response) => response.json())
       .then((data) => setAll_product(data));
 
     if (localStorage.getItem("auth-token")) {
-      fetch("https://e-commerce-backend-u1kd.onrender.com/getcart", {
+      fetch("https://e-commerce-backend3.onrender.com/getcart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -41,7 +40,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
 
     if (localStorage.getItem("auth-token")) {
-      fetch("https://e-commerce-backend-u1kd.onrender.com/addtocart", {
+      fetch("https://e-commerce-backend3.onrender.com/addtocart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -59,7 +58,7 @@ const ShopContextProvider = (props) => {
     setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
 
     if (localStorage.getItem("auth-token")) {
-      fetch("https://e-commerce-backend-u1kd.onrender.com/removefromcart", {
+      fetch("https://e-commerce-backend3.onrender.com/removefromcart", {
         method: "POST",
         headers: {
           Accept: "application/form-data",
@@ -112,8 +111,6 @@ const ShopContextProvider = (props) => {
 };
 
 export default ShopContextProvider;
-
-
 
 /*
 import React, { createContext, useEffect, useState } from "react";
